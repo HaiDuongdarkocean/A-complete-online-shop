@@ -16,5 +16,5 @@ app.use(express.static('public'));
 app.use(authRoutes);
 
 app.listen(PORT, () => {
-    console.log('This app is running in https://localhost:3000');
+    console.log('This app is running in http://localhost:3000/signup');
 })
