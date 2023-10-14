@@ -14,8 +14,12 @@ async function signup(req, res) {
     req.body.postal,
     req.body.city
   );
-
-  await user.signup();
+  try {
+    await user.signup();
+  } catch (error) {
+    next(error)
+    return
+  }
 
   res.redirect('/login');
 }
@@ -45,9 +49,15 @@ async function login(req, res) {
     })
 }
 
+function logout(req, res) {
+  authUtil.destroyUserAuthSession(req);
+  res.redirect('/login');
+}
+
 module.exports = {
   getSignup,
   getLogin,
   signup,
-  login
+  login,
+  logout,
 };
