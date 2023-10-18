@@ -3,6 +3,7 @@ function getSessionData(req) {
 
     req.session.flashedData = null;
 
+    console.log(sessionData)
     return sessionData;
 }
 

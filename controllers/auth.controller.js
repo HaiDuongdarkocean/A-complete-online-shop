@@ -4,12 +4,27 @@ const validation = require("../util/validation");
 const sessionFlash = require("../util/session-flash");
 
 function getSignup(req, res) {
-  res.render("customer/auth/signup");
+  let sessionData = sessionFlash.getSessionData(req);
+
+  if (!sessionData) {
+    sessionData = {
+      email: "",
+      confirmEmail: "",
+      password: "",
+      fullname: "",
+      street: "",
+      postal: "",
+      city: "",
+    };
+  }
+
+  res.render("customer/auth/signup", {inputData: sessionData});
 }
 
 async function signup(req, res) {
   const enteredData = {
     email: req.body.email,
+    confirmEmail: req.body['confirm-email'],
     password: req.body.password,
     fullname: req.body.fullname,
     street: req.body.street,
@@ -55,7 +70,6 @@ async function signup(req, res) {
     const existsAlready = await user.existsAlready();
 
     if (existsAlready) {
-      console.log("The Account already exists!");
 
       sessionFlash.flashDataSession(
         req,
@@ -80,7 +94,16 @@ async function signup(req, res) {
 }
 
 function getLogin(req, res) {
-  res.render("customer/auth/login");
+  let sessionData = sessionFlash.getSessionData(req);
+
+  if (!sessionData) {
+    sessionData = {
+      email: '',
+      password: ''
+    }
+  }
+
+  res.render("customer/auth/login", {inputData: sessionData});
 }
 
 async function login(req, res) {
@@ -92,6 +115,13 @@ async function login(req, res) {
     next(error);
     return;
   }
+  
+  const sessionErrorData = {
+    errorMessage:
+      "Invalid credentials - please double-check your email and password!",
+    email: user.email,
+    password: user.password,
+  };
 
   if (!existingUser) {
     sessionFlash.flashDataSession(req, sessionErrorData, function () {
@@ -101,13 +131,6 @@ async function login(req, res) {
   }
 
   const passwordIsCorrect = await user.hasMatchPassword(existingUser.password);
-
-  const sessionErrorData = {
-    errorMessage:
-      "Invalid credentials - please double-check your email and password!",
-    email: user.email,
-    password: user.password,
-  };
 
   if (!passwordIsCorrect) {
     sessionFlash.flashDataSession(req, sessionErrorData, function () {
