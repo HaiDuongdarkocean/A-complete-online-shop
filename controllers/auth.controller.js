@@ -56,14 +56,17 @@ async function signup(req, res) {
 
     if (existsAlready) {
       console.log("The Account already exists!");
-      sessionFlash.flashDataSession() {
-        req, {
+
+      sessionFlash.flashDataSession(
+        req,
+        {
           errorMessage: "User exists already! logging in instead!",
-          ...enteredData
-        }, function() {
+          ...enteredData,
+        },
+        function () {
           res.redirect("/signup");
         }
-      };
+      );
       return;
     }
 
@@ -91,24 +94,25 @@ async function login(req, res) {
   }
 
   if (!existingUser) {
-    sessionFlash.flashDataSession(req, sessionErrorData, function() {
+    sessionFlash.flashDataSession(req, sessionErrorData, function () {
       res.redirect("/login");
-    })
+    });
     return;
   }
 
   const passwordIsCorrect = await user.hasMatchPassword(existingUser.password);
 
-  const sessionErrorData =  {
-    errorMessage: 'Invalid credentials - please double-check your email and password!',
+  const sessionErrorData = {
+    errorMessage:
+      "Invalid credentials - please double-check your email and password!",
     email: user.email,
-    password: user.password
-  }
+    password: user.password,
+  };
 
   if (!passwordIsCorrect) {
-    sessionFlash.flashDataSession(req, sessionErrorData, function() {
+    sessionFlash.flashDataSession(req, sessionErrorData, function () {
       res.redirect("/login");
-    })
+    });
     return;
   }
 
