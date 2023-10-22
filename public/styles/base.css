@@ -91,3 +91,8 @@ ol {
 .alert p {
     margin: var(--space-2)
 }
+
+a {
+    color: var(--color-primary-400);
+    text-decoration: none;
+}
