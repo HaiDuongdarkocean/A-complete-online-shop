@@ -5,7 +5,7 @@ class Product {
         this.title = productData.title;
         this.image = productData.image;
         this.summary = productData.summary;
-        this.price = productData.price;
+        this.price = +productData.price;
         this.description = productData.description;
         this.imagePath = `product-data/image/${productData.image}`;
         this.imageUrl = `/products/assets/images/${productData.image}`;
