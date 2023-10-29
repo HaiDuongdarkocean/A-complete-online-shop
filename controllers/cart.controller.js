@@ -1,22 +1,27 @@
-const Product = require('../models/product.model');
+const Product = require("../models/product.model");
 
-function addCartItem(req, res) {
-    let product;
-    try {
-        product = Product.findById(req.body.productId);
-    } catch (error) {
-        next(error);
-        return
-    }
-    
-    const cart = res.locals.cart;
-    cart.addItem(product)
-    req.session.cart = cart;
+function getCart(req, res) {
+  res.render("customer/cart/cart");
+}
 
-    res.status(201).json({
-        message: 'Cart updated!',
-        newTotalItems: cart.totalQuantity,
-    });
-}  
+async function addCartItem(req, res) {
+  let product;
+  try {
+    product = await Product.findById(req.body.productId);
+  } catch (error) {
+    next(error);
+    return;
+  }
 
-module.exports = addCartItem;
+  const cart = res.locals.cart;
+
+  cart.addItem(product);
+  req.session.cart = cart;
+
+  res.status(201).json({
+    message: "Cart updated!",
+    newTotalItems: cart.totalQuantity,
+  });
+}
+
+module.exports = { addCartItem, getCart };
