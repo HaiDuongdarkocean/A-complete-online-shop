@@ -9,11 +9,12 @@ const expressSession = require('express-session');
 
 const createSessionConfig = require('./config/session');
 const db = require("./data/database");
-const addCsrfTokenMiddleware = require('./middleware/csrf-token');
-const errorHandlerMiddleware = require('./middleware/error-handler');
-const checkAuthStatusMiddleware = require('./middleware/check-auth');
-const protectRoutesMiddleware = require('./middleware/protect-routes');
-const cartMiddleware = require('./middleware/cart');
+const addCsrfTokenMiddleware = require('./middlewares/csrf-token');
+const errorHandlerMiddleware = require('./middlewares/error-handler');
+const checkAuthStatusMiddleware = require('./middlewares/check-auth');
+const protectRoutesMiddleware = require('./middlewares/protect-routes');
+const updateCartPricesMiddleware = require('./middlewares/update-cart-prices');
+const cartMiddleware = require('./middlewares/cart');
 const baseRoutes  = require('./routes/base.routes');
 const authRoutes = require("./routes/auth.routes");
 const productsRoutes = require('./routes/products.routes');
@@ -46,6 +47,7 @@ app.use(authRoutes);
 app.use(productsRoutes);
 app.use('/cart', cartRoutes)
 app.use(protectRoutesMiddleware);
+app.use(updateCartPricesMiddleware);
 app.use('/orders', ordersRoutes);
 app.use('/admin', adminRoutes);
 
