@@ -20,6 +20,13 @@ async function addOrder(req, res, next) {
     return next(error);
   }
 
+  // Assuming cart is available in the request or session
+  const cart = req.session.cart; // Make sure to adjust this based on how you store the cart
+
+  if (!cart) {
+    return res.status(400).send('Cart is empty'); // Handle the case where the cart is empty
+  }
+
   const order = new Order(cart, userDocument);
 
   try {
